@@ -100,14 +100,24 @@ document.addEventListener("DOMContentLoaded", () => {
     closeModal();
   });
 
+  function formatUrl(url) {
+    if (!url) return "";
+    // If the URL doesn't start with a protocol, add https://
+    if (!url.match(/^https?:\/\//i)) {
+      return "https://" + url;
+    }
+    return url;
+  }
+
   function renderApplications() {
     appTableBody.innerHTML = "";
     applications.forEach((app) => {
       const row = document.createElement("tr");
       row.className = "border-b hover:bg-slate-50";
+      const formattedLink = formatUrl(app.link);
       const linkCell = app.link
-        ? `<a href="${app.link}" target="_blank" rel="noopener noreferrer" class="text-blue-600 hover:underline">View</a>`
-        : "N/A";
+        ? `<a href="${formattedLink}" target="_blank" rel="noopener noreferrer" class="text-blue-600 hover:underline">View</a>`
+        : "";
       row.innerHTML = `
                 <td class="p-3 text-sm">${app.date}</td>
                 <td class="p-3 font-medium">${app.company}</td>
@@ -328,6 +338,48 @@ document.addEventListener("DOMContentLoaded", () => {
     const progress = totalCount > 0 ? (checkedCount / totalCount) * 100 : 0;
     learningProgressEl.style.width = `${progress}%`;
   }
+
+  // Problem Form Logic
+  document
+    .getElementById("problem-form")
+    .addEventListener("submit", function (event) {
+      event.preventDefault();
+
+      // Get form values
+      const problemName = document.getElementById("problem-name").value;
+      const problemDate = document.getElementById("problem-date").value;
+      const problemDescription = document.getElementById(
+        "problem-description"
+      ).value;
+      const problemLink = document.getElementById("problem-link").value;
+
+      // Validate mandatory fields
+      if (!problemName || !problemDate) {
+        alert("Problem Name and Date are mandatory!");
+        return;
+      }
+
+      // Create a new row for the table
+      const tableBody = document
+        .getElementById("problem-table")
+        .querySelector("tbody");
+      const newRow = document.createElement("tr");
+
+      newRow.innerHTML = `
+      <td>${problemName}</td>
+      <td>${problemDate}</td>
+      <td>${problemDescription || ""}</td>
+      <td>${
+        problemLink ? `<a href="${problemLink}" target="_blank">Link</a>` : ""
+      }</td>
+    `;
+
+      // Append the new row to the table
+      tableBody.appendChild(newRow);
+
+      // Clear the form
+      document.getElementById("problem-form").reset();
+    });
 
   // Initial Render
   renderApplications();
