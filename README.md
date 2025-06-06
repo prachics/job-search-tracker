@@ -1,5 +1,5 @@
 # Job Tracker
-
+Link - https://prachics.github.io/job-search-tracker/
 ## Overview
 
 Job Tracker is a simple web-based application designed to help users manage and track their job applications. It includes an HTML file for the structure, a CSS file for styling, and a JavaScript file for interactivity.
