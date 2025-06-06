@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Job Search Command Center</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body class="bg-slate-50 text-slate-800">
+    <div id="app" class="max-w-7xl mx-auto p-4 sm:p-6 lg:p-8">
+      <header class="mb-8">
+        <h1 class="text-3xl sm:text-4xl font-bold text-slate-900">
+          Job Search Command Center
+        </h1>
+        <p class="text-slate-500 mt-1">
+          Your dashboard for tracking progress and staying motivated.
+        </p>
+      </header>
+
+      <main class="grid grid-cols-1 lg:grid-cols-4 gap-8">
+        <nav id="main-nav" class="lg:col-span-1">
+          <ul class="flex lg:flex-col gap-2 bg-white p-3 rounded-lg shadow-sm">
+            <li>
+              <button
+                data-target="applications"
+                class="nav-item w-full text-left p-3 rounded-md nav-item-active"
+              >
+                📝 Applications
+              </button>
+            </li>
+            <li>
+              <button
+                data-target="leetcode"
+                class="nav-item w-full text-left p-3 rounded-md"
+              >
+                💻 LeetCode
+              </button>
+            </li>
+            <li>
+              <button
+                data-target="outreach"
+                class="nav-item w-full text-left p-3 rounded-md"
+              >
+                📨 Outreach
+              </button>
+            </li>
+            <li>
+              <button
+                data-target="learning"
+                class="nav-item w-full text-left p-3 rounded-md"
+              >
+                🧠 Learning
+              </button>
+            </li>
+          </ul>
+        </nav>
+
+        <div id="content-panels" class="lg:col-span-3">
+          <!-- Applications Panel -->
+          <div
+            id="applications-panel"
+            class="panel bg-white p-6 rounded-lg shadow-sm"
+          >
+            <div class="flex justify-between items-center mb-4">
+              <h2 class="text-2xl font-bold">Application Log</h2>
+              <button
+                id="add-app-btn"
+                class="bg-blue-600 text-white px-4 py-2 rounded-lg font-semibold hover:bg-blue-700 transition"
+              >
+                Add Application
+              </button>
+            </div>
+            <p class="text-slate-600 mb-4">
+              This section helps you manage all your job applications in one
+              place. Keep track of where you've applied, the status of each
+              application, and any relevant notes to stay organized in your job
+              search.
+            </p>
+            <div class="mb-4">
+              <p class="font-medium">
+                Weekly Goal: <span id="app-count">0</span> / 10
+              </p>
+              <div class="w-full bg-slate-200 rounded-full h-2.5 mt-1">
+                <div
+                  id="app-progress"
+                  class="bg-blue-600 h-2.5 rounded-full progress-bar-fill"
+                  style="width: 0%"
+                ></div>
+              </div>
+            </div>
+            <div class="overflow-x-auto">
+              <table class="w-full text-left">
+                <thead>
+                  <tr class="border-b">
+                    <th class="p-3">Date</th>
+                    <th class="p-3">Company</th>
+                    <th class="p-3">Position</th>
+                    <th class="p-3">Status</th>
+                    <th class="p-3">Link</th>
+                  </tr>
+                </thead>
+                <tbody id="app-table-body">
+                  <!-- JS will populate this -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- LeetCode Panel -->
+          <div
+            id="leetcode-panel"
+            class="panel bg-white p-6 rounded-lg shadow-sm hidden"
+          >
+            <div class="flex justify-between items-center mb-4">
+              <h2 class="text-2xl font-bold">LeetCode Grind</h2>
+              <button
+                id="add-lc-btn"
+                class="bg-emerald-600 text-white px-4 py-2 rounded-lg font-semibold hover:bg-emerald-700 transition"
+              >
+                Add Problem
+              </button>
+            </div>
+            <p class="text-slate-600 mb-4">
+              Visualize your daily coding practice. Add the problems you solve
+              each day to track your consistency and see your progress over the
+              week. The chart helps you understand your effort distribution
+              across different difficulty levels.
+            </p>
+            <div class="chart-container mb-6">
+              <canvas id="leetcode-chart"></canvas>
+            </div>
+            <div id="lc-log" class="mt-4">
+              <h3 class="text-xl font-semibold mb-2">Weekly Problem Log</h3>
+              <div
+                id="lc-problems-list"
+                class="space-y-2 text-sm text-slate-700"
+              >
+                <!-- JS will populate this -->
+              </div>
+            </div>
+          </div>
+
+          <!-- Outreach Panel -->
+          <div
+            id="outreach-panel"
+            class="panel bg-white p-6 rounded-lg shadow-sm hidden"
+          >
+            <div class="flex justify-between items-center mb-4">
+              <h2 class="text-2xl font-bold">Outreach Log</h2>
+              <button
+                id="add-outreach-btn"
+                class="bg-purple-600 text-white px-4 py-2 rounded-lg font-semibold hover:bg-purple-700 transition"
+              >
+                Add Outreach
+              </button>
+            </div>
+            <p class="text-slate-600 mb-4">
+              Networking is key. Use this log to track your cold emails and
+              messages to recruiters and other contacts. Monitoring your
+              outreach helps ensure you're consistently building your
+              professional network.
+            </p>
+            <div class="mb-4">
+              <p class="font-medium">
+                Weekly Goal: <span id="outreach-count">0</span> / 5
+              </p>
+              <div class="w-full bg-slate-200 rounded-full h-2.5 mt-1">
+                <div
+                  id="outreach-progress"
+                  class="bg-purple-600 h-2.5 rounded-full progress-bar-fill"
+                  style="width: 0%"
+                ></div>
+              </div>
+            </div>
+            <div class="overflow-x-auto">
+              <table class="w-full text-left">
+                <thead>
+                  <tr class="border-b">
+                    <th class="p-3">Date</th>
+                    <th class="p-3">Contact</th>
+                    <th class="p-3">Company</th>
+                    <th class="p-3">Platform</th>
+                    <th class="p-3">Replied?</th>
+                  </tr>
+                </thead>
+                <tbody id="outreach-table-body">
+                  <!-- JS will populate this -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- Learning Panel -->
+          <div
+            id="learning-panel"
+            class="panel bg-white p-6 rounded-lg shadow-sm hidden"
+          >
+            <h2 class="text-2xl font-bold mb-4">Weekly Tech Stack Focus</h2>
+            <p class="text-slate-600 mb-6">
+              Continuous learning is crucial. Define a skill you want to focus
+              on this week, set a clear goal, and track your progress through
+              key learning activities. This structured approach helps solidify
+              new knowledge.
+            </p>
+            <div class="space-y-4">
+              <div>
+                <label for="skill-input" class="font-semibold block mb-1"
+                  >This Week's Skill:</label
+                >
+                <input
+                  type="text"
+                  id="skill-input"
+                  class="w-full p-2 border rounded-md"
+                  placeholder="e.g., React Hooks"
+                />
+              </div>
+              <div>
+                <label for="goal-input" class="font-semibold block mb-1"
+                  >Learning Goal:</label
+                >
+                <textarea
+                  id="goal-input"
+                  rows="3"
+                  class="w-full p-2 border rounded-md"
+                  placeholder="e.g., Build a small app using useState and useEffect"
+                ></textarea>
+              </div>
+              <div>
+                <h3 class="font-semibold mb-2">Progress Checklist</h3>
+                <div class="w-full bg-slate-200 rounded-full h-2.5 mb-2">
+                  <div
+                    id="learning-progress"
+                    class="bg-amber-500 h-2.5 rounded-full progress-bar-fill"
+                    style="width: 0%"
+                  ></div>
+                </div>
+                <div class="space-y-2">
+                  <label class="flex items-center p-3 bg-slate-100 rounded-md"
+                    ><input
+                      type="checkbox"
+                      class="learning-checkbox h-4 w-4 mr-3"
+                    />
+                    Read: Official Docs / Key Articles</label
+                  >
+                  <label class="flex items-center p-3 bg-slate-100 rounded-md"
+                    ><input
+                      type="checkbox"
+                      class="learning-checkbox h-4 w-4 mr-3"
+                    />
+                    Watch: Tutorials / Conference Talks</label
+                  >
+                  <label class="flex items-center p-3 bg-slate-100 rounded-md"
+                    ><input
+                      type="checkbox"
+                      class="learning-checkbox h-4 w-4 mr-3"
+                    />
+                    Build: Small Project / Code Samples</label
+                  >
+                  <label class="flex items-center p-3 bg-slate-100 rounded-md"
+                    ><input
+                      type="checkbox"
+                      class="learning-checkbox h-4 w-4 mr-3"
+                    />
+                    Explain: Write Notes / Explain it</label
+                  >
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+
+    <!-- Modals -->
+    <div
+      id="modal-backdrop"
+      class="fixed inset-0 bg-black bg-opacity-50 hidden flex justify-center items-center p-4"
+    >
+      <!-- Add Application Modal -->
+      <div
+        id="add-app-modal"
+        class="bg-white p-8 rounded-lg shadow-xl w-full max-w-md hidden"
+      >
+        <h3 class="text-xl font-bold mb-4">Add New Application</h3>
+        <form id="add-app-form" class="space-y-4">
+          <input
+            type="date"
+            id="app-date"
+            class="w-full p-2 border rounded-md"
+            required
+          />
+          <input
+            type="text"
+            id="app-company"
+            placeholder="Company Name"
+            class="w-full p-2 border rounded-md"
+            required
+          />
+          <input
+            type="text"
+            id="app-position"
+            placeholder="Position / Job ID"
+            class="w-full p-2 border rounded-md"
+            required
+          />
+          <input
+            type="url"
+            id="app-link"
+            placeholder="Link to Job Posting"
+            class="w-full p-2 border rounded-md"
+          />
+          <div>
+            <button
+              type="submit"
+              class="w-full bg-blue-600 text-white p-2 rounded-md font-semibold hover:bg-blue-700"
+            >
+              Save
+            </button>
+            <button
+              type="button"
+              class="modal-close-btn w-full bg-slate-200 text-slate-800 p-2 mt-2 rounded-md hover:bg-slate-300"
+            >
+              Cancel
+            </button>
+          </div>
+        </form>
+      </div>
+
+      <!-- Add LeetCode Modal -->
+      <div
+        id="add-lc-modal"
+        class="bg-white p-8 rounded-lg shadow-xl w-full max-w-md hidden"
+      >
+        <h3 class="text-xl font-bold mb-4">Log LeetCode Problem</h3>
+        <form id="add-lc-form" class="space-y-4">
+          <input
+            type="date"
+            id="lc-date"
+            class="w-full p-2 border rounded-md"
+            required
+          />
+          <input
+            type="text"
+            id="lc-name"
+            placeholder="Problem Name / Number"
+            class="w-full p-2 border rounded-md"
+            required
+          />
+          <select id="lc-difficulty" class="w-full p-2 border rounded-md">
+            <option value="Easy">Easy</option>
+            <option value="Medium">Medium</option>
+            <option value="Hard">Hard</option>
+          </select>
+          <div>
+            <button
+              type="submit"
+              class="w-full bg-emerald-600 text-white p-2 rounded-md font-semibold hover:bg-emerald-700"
+            >
+              Save
+            </button>
+            <button
+              type="button"
+              class="modal-close-btn w-full bg-slate-200 text-slate-800 p-2 mt-2 rounded-md hover:bg-slate-300"
+            >
+              Cancel
+            </button>
+          </div>
+        </form>
+      </div>
+
+      <!-- Add Outreach Modal -->
+      <div
+        id="add-outreach-modal"
+        class="bg-white p-8 rounded-lg shadow-xl w-full max-w-md hidden"
+      >
+        <h3 class="text-xl font-bold mb-4">Add New Outreach</h3>
+        <form id="add-outreach-form" class="space-y-4">
+          <input
+            type="date"
+            id="outreach-date"
+            class="w-full p-2 border rounded-md"
+            required
+          />
+          <input
+            type="text"
+            id="outreach-contact"
+            placeholder="Contact Person"
+            class="w-full p-2 border rounded-md"
+            required
+          />
+          <input
+            type="text"
+            id="outreach-company"
+            placeholder="Company Name"
+            class="w-full p-2 border rounded-md"
+            required
+          />
+          <input
+            type="text"
+            id="outreach-platform"
+            placeholder="Platform (Email/LinkedIn)"
+            class="w-full p-2 border rounded-md"
+            required
+          />
+          <div>
+            <button
+              type="submit"
+              class="w-full bg-purple-600 text-white p-2 rounded-md font-semibold hover:bg-purple-700"
+            >
+              Save
+            </button>
+            <button
+              type="button"
+              class="modal-close-btn w-full bg-slate-200 text-slate-800 p-2 mt-2 rounded-md hover:bg-slate-300"
+            >
+              Cancel
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <script src="script.js" defer></script>
+  </body>
+</html>

@@ -1,0 +1,33 @@
+body {
+  font-family: "Inter", sans-serif;
+}
+
+.chart-container {
+  position: relative;
+  width: 100%;
+  max-width: 800px;
+  margin-left: auto;
+  margin-right: auto;
+  height: 320px;
+  max-height: 400px;
+}
+
+@media (min-width: 768px) {
+  .chart-container {
+    height: 350px;
+  }
+}
+
+.nav-item-active {
+  background-color: #e2e8f0;
+  color: #1e293b;
+  font-weight: 600;
+}
+
+.nav-item {
+  transition: all 0.2s ease-in-out;
+}
+
+.progress-bar-fill {
+  transition: width 0.5s ease-in-out;
+}
